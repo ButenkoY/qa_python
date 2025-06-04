@@ -1,5 +1,5 @@
+import pytest
 from main import BooksCollector
-
 # класс TestBooksCollector объединяет набор тестов, которыми мы покрываем наше приложение BooksCollector
 # обязательно указывать префикс Test
 class TestBooksCollector:
@@ -23,7 +23,6 @@ class TestBooksCollector:
     # напиши свои тесты ниже
     # чтобы тесты были независимыми в каждом из них создавай отдельный экземпляр класса BooksCollector()
 
-import pytest
 @pytest.fixture
 def new_collector():
     return BooksCollector()
@@ -69,17 +68,23 @@ def collector_with_favorites(collector_with_books):
         new_collector.add_new_book("1984")
         assert len(new_collector.get_books_genre()) == 1
 
-    def test_set_book_genre_valid_genre_sets_genre(self, collector_with_books):
+    def test_set_book_genre_valid_genre(self, collector_with_books):
         collector_with_books.set_book_genre("Мастер и Маргарита", "Фантастика")
         assert collector_with_books.get_book_genre("Мастер и Маргарита") == "Фантастика"
 
-    def test_set_book_genre_invalid_genre_does_not_set(self, collector_with_books):
+    def test_set_book_genre_invalid_genre(self, collector_with_books):
         collector_with_books.set_book_genre("Мастер и Маргарита", "Роман")
         assert collector_with_books.get_book_genre("Мастер и Маргарита") == ""
 
-    def test_get_books_with_specific_genre_returns_correct_books(self, collector_with_books):
-        books = collector_with_books.get_books_with_specific_genre("Фантастика")
-        assert books == ["1984"]
+    def test_get_book_genre_returns_correct_genre(self, collector_with_books):
+        assert collector_with_books.get_book_genre("1984") == "Фантастика"
+        assert collector_with_books.get_book_genre("Оно") == "Ужасы"
+        assert collector_with_books.get_book_genre("Мастер и Маргарита") == ""
+
+    def test_get_books_with_specific_genre(self, collector_with_books):
+        assert collector_with_books.get_books_with_specific_genre("Фантастика") == ["1984"]
+        assert collector_with_books.get_books_with_specific_genre("Ужасы") == ["Оно"]
+        assert collector_with_books.get_books_with_specific_genre("Мультфильмы") == ["Ну, погоди!"]
 
     def test_get_books_for_children_excludes_age_rated_books(self, collector_with_books):
         children_books = collector_with_books.get_books_for_children()
